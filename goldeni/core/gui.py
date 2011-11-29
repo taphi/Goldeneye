@@ -46,7 +46,7 @@ class mainWindow(Tkinter.Tk):
 
 	## query DB
 	def database(self):
-		db = MySQLdb.connect(host='localhost', user='root', db='maindb')
+		db = MySQLdb.connect(host='141.219.193.136', user='root', db='maindb')
 		curs = db.cursor()
 		return curs
 
@@ -108,64 +108,145 @@ class mainWindow(Tkinter.Tk):
 
 	def queryDatabase(self):
 		query = Tkinter.Toplevel()
-		query.title("Patient Information")
-		query.geometry('250x180+0+0')
-
-		QL1 = Tkinter.Label(query, text="First Name:")
-		QL1.grid(sticky=E)
-		QE1 = Tkinter.Entry(query, bd=2)
-		QE1.grid(row=0, column=1)
-
-		QL2 = Tkinter.Label(query, text="Last Name:")
-                QL2.grid(sticky=E)
-                QE2 = Tkinter.Entry(query, bd=2)
-                QE2.grid(row=1, column=1)
-
-		QL3 = Tkinter.Label(query, text="SSN:")
-                QL3.grid(sticky=E)
-                QE3 = Tkinter.Entry(query, bd=2)
-                QE3.grid(row=2, column=1)
-
-		self.btype = StringVar(query)
-		self.btype.set("A")
-		
-		QL4 = Tkinter.Label(query, text="Blood type:")
-		QL4.grid(sticky=E)
-		QE4 = Tkinter.OptionMenu(query, self.btype, "A", "B", "AB", "O")
-                QE4.config(bg="white")
-		QE4.grid(row=3, column=1, sticky=W)
-
-		self.gender = StringVar(query)
-		self.gender.set("Male")		
-
-		QL5 = Tkinter.Label(query, text="Gender:")
-                QL5.grid(sticky=E)
-                QE5 = Tkinter.OptionMenu(query, self.gender, "Male", "Female")
-		QE5.config(bg="white")
-                QE5.grid(row=4, column=1, sticky=W)
-
-		button = Tkinter.Button(query, text="Query", command=self.passFunction,bg="white")
-       		button.grid(row=8, column=1, pady=10)
-
-	def passFunction(self):
-                func = Tkinter.Toplevel()
+                query.title("Patient Information")
+                query.geometry('250x180+0+0')
+               
+                #db = MySQLdb.connect(host='141.219.193.136', user='root', passwd='admin', db='Goldeneye')
+                #curs = db.cursor()
+               
+                self.QL1 = Tkinter.Label(query, text="First Name:")
+                self.QL1.grid(sticky=E)
+                self.QE1 = Tkinter.Entry(query, bd=2)
+                self.QE1.grid(row=0, column=1)
+ 
+                self.QL2 = Tkinter.Label(query, text="Last Name:")
+                self.QL2.grid(sticky=E)
+                self.QE2 = Tkinter.Entry(query, bd=2)
+                self.QE2.grid(row=1, column=1)
+ 
+                self.QL3 = Tkinter.Label(query, text="SSN:")
+                self.QL3.grid(sticky=E)
+                self.QE3 = Tkinter.Entry(query, bd=2)
+                self.QE3.grid(row=2, column=1)
+ 
+#               self.btype = StringVar(query)
+#               self.btype.set("A")
+               
+#               self.QL4 = Tkinter.Label(query, text="Blood type:")
+#               self.QL4.grid(sticky=E)
+#               self.QE4 = Tkinter.OptionMenu(query, self.btype, "A", "B", "AB", "O")
+#               self.QE4.config(bg="white")
+#               self.QE4.grid(row=3, column=1, sticky=W)
+ 
+#               self.gender = StringVar(query)
+#               self.gender.set("Male")        
+ 
+#               self.QL5 = Tkinter.Label(query, text="Gender:")
+#               self.QL5.grid(sticky=E)
+#               self.QE5 = Tkinter.OptionMenu(query, self.gender, "Male", "Female")
+#               self.QE5.config(bg="white")
+#               self.QE5.grid(row=4, column=1, sticky=W)
+ 
+                button = Tkinter.Button(query, text="Query", command=self.passFunction,bg="white")
+                button.grid(row=8, column=1, pady=10)
+ 
+	def passFunction(self):    
+		func = Tkinter.Toplevel()
                 func.title("Patient Record")
                 func.geometry('400x400+0+0')
-		
-		#l = Label(func, text="testID:").grid(row=0, column=0)
-		#self.fields['testID'] = Entry(func).grid(row=0, column=1)
-		
-		#l2 = Label(func, text="nameID:").grid(row=2, column=0)
-		#self.fields['nameID'] = Entry(func).grid(row=2, column=1)
-		
-
+               
+                db = MySQLdb.connect(host='141.219.193.136', user='root', passwd='admin', db='Goldeneye')
+                cursor = db.cursor()
+               
+                self.FirstName = self.QE1.get()
+                self.LastName = self.QE2.get()
+                self.ssn = self.QE3.get()
+ 
+#               cursor.execute ("""SELECT pat_face FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+#                self.FACEresults = StringVar()
+#                self.FACEresults.set(cursor.fetchone())
+ 
+                cursor.execute ("""SELECT pat_firstname, pat_middleinitial, pat_lastname FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+                self.NAMEresults = StringVar()
+                self.NAMEresults.set(cursor.fetchone())
+ 
+                cursor.execute ("""SELECT pat_street, pat_city, pat_state, pat_zip FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+                self.ADDresults = StringVar()
+                self.ADDresults.set(cursor.fetchone())
+       
+                cursor.execute ("""SELECT pat_phone FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+                self.PHONEresults = StringVar()
+                self.PHONEresults.set(cursor.fetchone())
+ 
+                cursor.execute ("""SELECT pat_bloodtype FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+                self.BLOODresults = StringVar()
+                self.BLOODresults.set(cursor.fetchone())
+ 
+                cursor.execute ("""SELECT pat_weight FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+                self.WEIGHTresults = StringVar()
+                self.WEIGHTresults.set(cursor.fetchone())
+ 
+                cursor.execute ("""SELECT pat_hieght FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+                self.HEIGHTresults = StringVar()
+                self.HEIGHTresults.set(cursor.fetchone())
+ 
+                cursor.execute ("""SELECT pat_face FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+                self.PATFACEresults = StringVar()
+                self.PATFACEresults.set(cursor.fetchone())
+ 
+ 
+                db.close()
+ 
+#               FACENAME = Tkinter.Label(func, text='Patient Information:')
+#                FACENAME.grid(sticky=W)
+#                FACENAME = Tkinter.Label(func, textvariable=self.FACEresults)
+#                FACENAME.grid(row=0, column=1, sticky=W)
+               
+                PATINFO = Tkinter.Label(func, text='Patient Information:')
+                PATINFO.grid(row=0, column=0, sticky=W)
+ 
+                PATNAME = Tkinter.Label(func, text='Name: ')
+                PATNAME.grid(sticky=W)
+                PATNAME = Tkinter.Label(func, textvariable=self.NAMEresults)
+                PATNAME.grid(row=1, column=1, sticky=W)
+ 
+                PATADDRESS = Tkinter.Label(func, text='Address:')
+                PATADDRESS.grid(sticky=W)
+                PATADDRESS = Tkinter.Label(func, textvariable=self.ADDresults)
+                PATADDRESS.grid(row=2, column=1, sticky=W)
+ 
+                PATPHONE = Tkinter.Label(func, text='Phone Number: ')
+                PATPHONE.grid(sticky=W)
+                PATPHONE = Tkinter.Label(func, textvariable=self.PHONEresults)
+                PATPHONE.grid(row=3, column=1, sticky=W)
+ 
+                PATBLOOD = Tkinter.Label(func, text='Blood Type: ')
+                PATBLOOD.grid(sticky=W)
+                PATBLOOD = Tkinter.Label(func, textvariable=self.BLOODresults)
+                PATBLOOD.grid(row=4, column=1, sticky=W)
+ 
+                PATWEIGHT = Tkinter.Label(func, text='Weight: ')
+                PATWEIGHT.grid(sticky=W)
+                PATWEIGHT = Tkinter.Label(func, textvariable=self.WEIGHTresults)
+                PATWEIGHT.grid(row=5, column=1, sticky=W)
+ 
+                PATHEIGHT = Tkinter.Label(func, text='Height: ')
+                PATHEIGHT.grid(sticky=W)
+                PATHEIGHT = Tkinter.Label(func, textvariable=self.HEIGHTresults)
+                PATHEIGHT.grid(row=6, column=1, sticky=W)
+ 
+                PATFACE = Tkinter.Label(func, text='FACE: ')
+                PATFACE.grid(sticky=W)
+                PATFACE = Tkinter.Label(func, textvariable=self.PATFACEresults)
+                PATFACE.grid(row=7, column=1)
+ 	
 	def aboutProj(self):
-		aproj = Tkinter.Toplevel(bg="white")
+		aproj = Tkinter.Toplevel()
 		aproj.title("Project Goldeneye")
-		aproj.geometry('250x250+0+0')
+		aproj.geometry('275x275+0+0')
 
-		message = "Project Members: \nMatt, Joe, Ricky\n\nDetails:\n"
-		Tkinter.Label(aproj,text=message,bg="white").pack()
+		message = "Project Members: \nMatt Masseth, Joe Vella, Ricky Barber\n\nDetails:\n- Research the iris recognition process\n\n- Find improvements in the process\n(new algorithms and techniques)\n\n- Implement those improvements in \na software environment\n\n- Convert image to Iris Code, and \nprovide a method to compare \n\n- Research possible hardware solutions"
+		Tkinter.Label(aproj,text=message).pack()
 
 	def loadImage(self):
 		imgPath = tkFileDialog.askopenfilename()
