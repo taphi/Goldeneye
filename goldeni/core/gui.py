@@ -52,67 +52,101 @@ class mainWindow(Tkinter.Tk):
 
 	def changePara(self):
 		cpara = Tkinter.Toplevel()
-		cpara.title("Advanced Configuration Options")
-		cpara.geometry('400x140+0+0')
-
-		self.f = open('defaultpara.txt');
+                cpara.title("Advanced Configuration Options")
+                cpara.geometry('330x250+0+0')
+ 
+                self.f = open('defaultpara.txt');
                 self.lines = self.f.readlines()
                 self.f.close()
+ 
+                self.ofile = StringVar()
+                self.ofile.set(self.lines[0])
+ 
+                self.sfile = StringVar()
+                self.sfile.set(self.lines[1])
+ 
+                self.vfile = StringVar()
+                self.vfile.set(self.lines[2])
+ 
+                self.PT = StringVar()
+                self.PT.set(self.lines[3])
+ 
+                self.IT = StringVar()
+                self.IT.set(self.lines[4])
+ 
+                self.MPR = StringVar()
+                self.MPR.set(self.lines[5])
+ 
+		self.svrip = StringVar()
+		self.svrip.set(self.lines[6])
 
-		self.HD = StringVar()
-		self.HD.set(self.lines[0])
+                #### Use arrays ####
+ 
+                self.opout = StringVar(cpara)
+                self.opout.set("Yes")
+                self.opsav = StringVar(cpara)
+                self.opsav.set("Yes")
+                self.opver = StringVar(cpara)
+                self.opver.set("Yes")
+ 
+                L7 = Tkinter.Label(cpara, text="Parameters")
+                L7.grid(row=0,column=1)
+ 
+                L1 = Tkinter.Label(cpara, text="Output debug info:")
+                L1.grid(row=7,column=0,sticky=E)
+                self.E1 = Tkinter.OptionMenu(cpara, self.opout, "Yes", "No")
+                self.E1.config(bg="white")
+                self.E1.grid(row=7, column=1)
+ 
+                L2 = Tkinter.Label(cpara, text="Save all images:")
+                L2.grid(row=5,column=0,sticky=E)
+                self.E2 = Tkinter.OptionMenu(cpara, self.opsav, "Yes", "No")
+                self.E2.config(bg="white")
+                self.E2.grid(row=5, column=1)
+ 
+                L3 = Tkinter.Label(cpara, text="Verify image:")
+                L3.grid(row=6,column=0,sticky=E)
+                self.E3 = Tkinter.OptionMenu(cpara, self.opver, "Yes", "No")
+                self.E3.config(bg="white")
+                self.E3.grid(row=6, column=1)
+ 
+                L4 = Tkinter.Label(cpara, text="Pupil threshold:")
+                L4.grid(row=1,column=0,sticky=E)
+                self.E4 = Tkinter.Entry(cpara, textvariable=self.PT, bd=2)
+                self.E4.grid(row=1, column=1)
+		self.PT.set('60')
+ 
+                L5 = Tkinter.Label(cpara, text="Iris threshold:")
+                L5.grid(row=2,column=0,sticky=E)
+                self.E5 = Tkinter.Entry(cpara, textvariable=self.IT, bd=2)
+                self.E5.grid(row=2, column=1)
+		self.IT.set('120')
+ 
+                L6 = Tkinter.Label(cpara, text="Minimum pupil radius:")
+                L6.grid(row=3,column=0,sticky=E)
+                self.E6 = Tkinter.Entry(cpara, textvariable=self.MPR, bd=2)
+                self.E6.grid(row=3, column=1)
+		self.MPR.set('20')
 
-		self.MFR = StringVar()
-                self.MFR.set(self.lines[1])
-	
-		self.HTO = StringVar()
-                self.HTO.set(self.lines[2])
-
-		self.UP = StringVar()
-                self.UP.set(self.lines[3])
-
-		#### Use arrays ####
-		L1 = Tkinter.Label(cpara, text="Hamming Distance:")
-		L1.grid(sticky=E)
-		E1 = Tkinter.Entry(cpara, bd=2)
-		E1.grid(row=0, column=1)
-		D1 = Tkinter.Label(cpara, textvariable=self.HD)
-		D1.grid(row=0, column=3)
-
-		L2 = Tkinter.Label(cpara, text="Median Filter Radius:")
-		L2.grid(sticky=E)
-		E2 = Tkinter.Entry(cpara, bd=2)
-		E2.grid(row=1, column=1)
-		D2 = Tkinter.Label(cpara, textvariable=self.MFR)
-                D2.grid(row=1, column=3)
-
-		L3 = Tkinter.Label(cpara, text="Hough Transform Option:")
-		L3.grid(sticky=E)
-		E3 = Tkinter.Entry(cpara, bd=2)
-		E3.grid(row=2, column=1)
-		D3 = Tkinter.Label(cpara, textvariable=self.HTO)
-                D3.grid(row=2, column=3)
-
-		L4 = Tkinter.Label(cpara, text="Unspecified Parameter:")
-		L4.grid(sticky=E)
-		E4 = Tkinter.Entry(cpara, bd=2)
-		E4.grid(row=3, column=1)
-		D4 = Tkinter.Label(cpara, textvariable=self.UP)
-                D4.grid(row=3, column=3)
-
-        	button = Tkinter.Button(cpara, text="Submit", command=self.paraSubmit,bg="white")
-       		button.grid(row=6, column=1, pady=10)
+		L8 = Tkinter.Label(cpara, text="Server IP:")
+                L8.grid(row=4,column=0,sticky=E)
+                self.E8 = Tkinter.Entry(cpara, textvariable=self.svrip, bd=2)
+                self.E8.grid(row=4, column=1)
+ 		self.svrip.set('141.219.193.136')
+		
+                button = Tkinter.Button(cpara, text="Submit", command=self.paraSubmit,bg="white")
+                button.grid(row=8, column=1, pady=10)
 
 	def paraSubmit(self):
                	tkMessageBox.showinfo("Iris Processing", "Test")
+		self.newfile = open('defaultpara.txt','w')
+		self.newfile.write("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", self.E1, self.E2, self.E3, self.E4, self.E5, self.E6, self.E8)
+		self.newfile.close()
 
 	def queryDatabase(self):
 		query = Tkinter.Toplevel()
                 query.title("Patient Information")
                 query.geometry('250x180+0+0')
-               
-                #db = MySQLdb.connect(host='141.219.193.136', user='root', passwd='admin', db='Goldeneye')
-                #curs = db.cursor()
                
                 self.QL1 = Tkinter.Label(query, text="First Name:")
                 self.QL1.grid(sticky=E)
@@ -153,18 +187,24 @@ class mainWindow(Tkinter.Tk):
 	def passFunction(self):    
 		func = Tkinter.Toplevel()
                 func.title("Patient Record")
-                func.geometry('400x400+0+0')
+                func.geometry('400x300+0+0')
                
-                db = MySQLdb.connect(host='141.219.193.136', user='root', passwd='admin', db='Goldeneye')
+                db = MySQLdb.connect(host=self.serverinfo, user='root', passwd='admin', db='Goldeneye')
                 cursor = db.cursor()
                
                 self.FirstName = self.QE1.get()
                 self.LastName = self.QE2.get()
                 self.ssn = self.QE3.get()
  
-#               cursor.execute ("""SELECT pat_face FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
-#                self.FACEresults = StringVar()
-#                self.FACEresults.set(cursor.fetchone())
+                cursor.execute ("""SELECT pat_face FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+                self.PATFACEresults = open('face.png','wb')
+                self.PATFACEresults.write(cursor.fetchone()[0])
+                self.PATFACEresults.close()
+ 
+                #cursor.execute ("""SELECT pat_iris FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
+                #self.PATIRISresults = open('iris.png','wb')
+                #self.PATIRISresults.write(cursor.fetchone()[0])
+                #self.PATIRISresults.close()
  
                 cursor.execute ("""SELECT pat_firstname, pat_middleinitial, pat_lastname FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
                 self.NAMEresults = StringVar()
@@ -189,57 +229,50 @@ class mainWindow(Tkinter.Tk):
                 cursor.execute ("""SELECT pat_hieght FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
                 self.HEIGHTresults = StringVar()
                 self.HEIGHTresults.set(cursor.fetchone())
- 
-                cursor.execute ("""SELECT pat_face FROM PATIENT WHERE pat_firstname=%s AND pat_lastname=%s AND pat_id=%s""",(self.FirstName,self.LastName,self.ssn))
-                self.PATFACEresults = StringVar()
-                self.PATFACEresults.set(cursor.fetchone())
- 
- 
+       
+                cursor.close()
                 db.close()
  
-#               FACENAME = Tkinter.Label(func, text='Patient Information:')
-#                FACENAME.grid(sticky=W)
-#                FACENAME = Tkinter.Label(func, textvariable=self.FACEresults)
-#                FACENAME.grid(row=0, column=1, sticky=W)
-               
-                PATINFO = Tkinter.Label(func, text='Patient Information:')
-                PATINFO.grid(row=0, column=0, sticky=W)
+                loadface = ImageTk.PhotoImage(file='face.png')
+                faceimage = Tkinter.Label(func, image=loadface)
+                faceimage.loadface=loadface
+                faceimage.grid(row=0)
  
+#               loadiris = ImageTk.PhotoImage(file='iris.png')
+#                irisimage = Tkinter.Label(func, image=loadiris)
+#                irisimage.loadiris=loadiris
+#                irisimage.grid(row=0,column=1)
+       
                 PATNAME = Tkinter.Label(func, text='Name: ')
-                PATNAME.grid(sticky=W)
+                PATNAME.grid(row=2,sticky=W)
                 PATNAME = Tkinter.Label(func, textvariable=self.NAMEresults)
-                PATNAME.grid(row=1, column=1, sticky=W)
+                PATNAME.grid(row=2, column=1, sticky=W)
  
                 PATADDRESS = Tkinter.Label(func, text='Address:')
-                PATADDRESS.grid(sticky=W)
+                PATADDRESS.grid(row=3,sticky=W)
                 PATADDRESS = Tkinter.Label(func, textvariable=self.ADDresults)
-                PATADDRESS.grid(row=2, column=1, sticky=W)
+                PATADDRESS.grid(row=3, column=1, sticky=W)
  
                 PATPHONE = Tkinter.Label(func, text='Phone Number: ')
-                PATPHONE.grid(sticky=W)
+                PATPHONE.grid(row=4,sticky=W)
                 PATPHONE = Tkinter.Label(func, textvariable=self.PHONEresults)
-                PATPHONE.grid(row=3, column=1, sticky=W)
+                PATPHONE.grid(row=4, column=1, sticky=W)
  
                 PATBLOOD = Tkinter.Label(func, text='Blood Type: ')
-                PATBLOOD.grid(sticky=W)
+                PATBLOOD.grid(row=5,sticky=W)
                 PATBLOOD = Tkinter.Label(func, textvariable=self.BLOODresults)
-                PATBLOOD.grid(row=4, column=1, sticky=W)
+                PATBLOOD.grid(row=5, column=1, sticky=W)
  
                 PATWEIGHT = Tkinter.Label(func, text='Weight: ')
-                PATWEIGHT.grid(sticky=W)
+                PATWEIGHT.grid(row=6,sticky=W)
                 PATWEIGHT = Tkinter.Label(func, textvariable=self.WEIGHTresults)
-                PATWEIGHT.grid(row=5, column=1, sticky=W)
+                PATWEIGHT.grid(row=6, column=1, sticky=W)
  
                 PATHEIGHT = Tkinter.Label(func, text='Height: ')
-                PATHEIGHT.grid(sticky=W)
+                PATHEIGHT.grid(row=7,sticky=W)
                 PATHEIGHT = Tkinter.Label(func, textvariable=self.HEIGHTresults)
-                PATHEIGHT.grid(row=6, column=1, sticky=W)
- 
-                PATFACE = Tkinter.Label(func, text='FACE: ')
-                PATFACE.grid(sticky=W)
-                PATFACE = Tkinter.Label(func, textvariable=self.PATFACEresults)
-                PATFACE.grid(row=7, column=1)
- 	
+                PATHEIGHT.grid(row=7, column=1, sticky=W) 
+	
 	def aboutProj(self):
 		aproj = Tkinter.Toplevel()
 		aproj.title("Project Goldeneye")
