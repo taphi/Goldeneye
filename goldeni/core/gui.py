@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
 import Tkinter
-import Image,ImageTk,tkFileDialog,sys,tkMessageBox,cv
+import Image,ImageTk,tkFileDialog,sys,tkMessageBox,re
 import main
-#import MySQLdb
+import MySQLdb
 from Tkinter import *
 
 
@@ -237,6 +237,29 @@ class mainWindow(Tkinter.Tk):
                 faceimage = Tkinter.Label(func, image=loadface)
                 faceimage.loadface=loadface
                 faceimage.grid(row=0)
+		
+		addStr = str(self.ADDresults.get())
+                addStr = addStr[1:-1]
+                addStrArr = addStr.split(",")
+                regexArr = [re.sub(r"'","",i) for i in addStrArr]
+
+                Addresults = ""
+                for i in regexArr:
+                        Addresults += i
+
+                self.ADDresults.set(Addresults)
+
+                heightStr = str(self.HEIGHTresults.get())
+                heightStr = heightStr[1:-1]
+                heightStrArr = heightStr.split(",")
+                regexheightArr = []
+
+                heightresults = ""
+                for i in regexheightArr:
+                        heightresults += i
+		
+		self.HEIGHTresults.set(heightresults)
+
  
 #               loadiris = ImageTk.PhotoImage(file='iris.png')
 #                irisimage = Tkinter.Label(func, image=loadiris)
@@ -282,8 +305,18 @@ class mainWindow(Tkinter.Tk):
 		Tkinter.Label(aproj,text=message).pack()
 
 	def loadImage(self):
-		imgPath = tkFileDialog.askopenfilename()
-		loadImage = ImageTk.PhotoImage(file=imgPath)
+		while 1:
+			try:
+				imgPath = tkFileDialog.askopenfilename()
+				loadImage = ImageTk.PhotoImage(file=imgPath)
+			except IOError:
+				fileString = " is not a valid PIL image file."
+				tkMessageBox.showwarning("Not an image", imgPath + fileString)
+			except AttributeError:
+                                fileString1 = " is not a valid PIL image file."
+                                tkMessageBox.showwarning("Not an image", imgPath + fileString1)
+                        else:
+                                break
 
 		self.background.destroy()
 		self.b1.destroy()
@@ -329,6 +362,68 @@ class mainWindow(Tkinter.Tk):
 
 		self.button2 = Tkinter.Button(self, text="Main Menu",command=self.mainmenu,bg="white")
 		self.button2.pack(side=LEFT)
+		
+	def AddImage(self):
+                self.add = Tkinter.Toplevel()
+                self.add.title("RECORD NOT FOUND!")
+                self.add.geometry('400x300+0+0')
+
+                self.addrecord = Tkinter.Label(self.add, text='Would you like to add this record to Database?')
+                self.addrecord.grid(row=0)
+
+                self.addbutton = Tkinter.Button(self.add, text="Yes",command=self.RecordInfo,bg="white")
+                self.addbutton.grid(row=1,column=0)
+                self.addbutton2 = Tkinter.Button(self.add, text="No",command=self.mainmenu,bg="white")
+                self.addbutton2.grid(row=1,column=1)
+
+	def RecordInfo(self):
+                self.addbutton.destroy()
+                self.addbutton2.destroy()
+                self.addrecord.destroy()
+                self.add.title("New Patient Information")
+
+                self.FIRSTPATNAMEentry = Tkinter.Label(self.add, text='First Name: ')
+                self.FIRSTPATNAMEentry.grid(row=2,sticky=W)
+                self.FIRSTPATNAMEentry = Tkinter.Entry(self.add, bd=2)
+                self.FIRSTPATNAMEentry.grid(row=2, column=1, sticky=W)
+
+                self.LASTPATNAMEentry = Tkinter.Label(self.add, text='Last Name: ')
+                self.LASTPATNAMEentry.grid(row=3,sticky=W)
+                self.LASTPATNAMEentry = Tkinter.Entry(self.add, bd=2)
+		self.LASTPATNAMEentry.grid(row=3, column=1, sticky=W)
+
+                self.PATADDRESSentry = Tkinter.Label(self.add, text='Address:')
+                self.PATADDRESSentry.grid(row=4,sticky=W)
+                self.PATADDRESSentry = Tkinter.Entry(self.add, bd=2)
+                self.PATADDRESSentry.grid(row=4, column=1, sticky=W)
+
+                self.PATPHONEentry = Tkinter.Label(self.add, text='Phone Number: ')
+                self.PATPHONEentry.grid(row=5,sticky=W)
+                self.PATPHONEentry = Tkinter.Entry(self.add, bd=2)
+                self.PATPHONEentry.grid(row=5, column=1, sticky=W)
+
+                self.PATBLOODentry = Tkinter.Label(self.add, text='Blood Type: ')
+                self.PATBLOODentry.grid(row=6,sticky=W)
+                self.PATBLOODentry = Tkinter.Entry(self.add, bd=2)
+                self.PATBLOODentry.grid(row=6, column=1, sticky=W)
+
+                self.PATWEIGHTentry = Tkinter.Label(self.add, text='Weight: ')
+                self.PATWEIGHTentry.grid(row=7,sticky=W)
+                self.PATWEIGHTentry = Tkinter.Entry(self.add, bd=2)
+                self.PATWEIGHTentry.grid(row=7, column=1, sticky=W)
+              
+		self.PATHEIGHTentry = Tkinter.Label(self.add, text='Height: ')
+                self.PATHEIGHTentry.grid(row=8,sticky=W)
+                self.PATHEIGHTentry = Tkinter.Entry(self.add, bd=2)
+                self.PATHEIGHTentry.grid(row=8, column=1, sticky=W)
+
+                self.entrybutton = Tkinter.Button(self.add, text="Main Menu",command=self.add.destroy,bg="white")
+                self.entrybutton.grid(row=9,column=0)
+                self.submitbutton = Tkinter.Button(self.add, text="Submit",command=self.submitrec,bg="white")
+                self.submitbutton.grid(row=9,column=1)
+
+        def submitrec(self):
+                return 0
 
 	def mainmenu(self):
 		self.newimage.destroy()
